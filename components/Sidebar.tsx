@@ -4,10 +4,19 @@ import { useRouter } from 'next/navigation'
 import React, { use } from 'react'
 import { Button } from './ui/button';
 import { PlusIcon } from '@radix-ui/react-icons';
+import { api } from '@/convex/_generated/api';
 
 function Sidebar() {
     const router = useRouter();
     const {closeMobileNav, isMobileNavOpen} = use(NavigationContext);
+    
+    // const chats = useQuery(api.chats.listChats);
+    // const createChat = useMutation(api.chats.createChat);
+    // const deleteChat = useMutation(api.chats.deleteChat);
+    const handleClick = () => {
+
+        closeMobileNav();
+    }
   return (
     <>
     {isMobileNavOpen && (
@@ -19,10 +28,16 @@ function Sidebar() {
 
         <div className='p-4 border-b border-gray-200/50'>
             <Button className='w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200/50 shadow-sm hover:shadow transition-all duration-200'
-            // onClick={handleNewChat}
+             onClick={handleNewChat}
             >
                 <PlusIcon className='mr-2 h-4 w-4'/> New Chat
             </Button>
+        </div>
+
+        <div className='flex-1 overflow-y-auto space-y-2.5 p-4 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent'>
+            {/* {chats?.map((chat)=>(
+                <ChatRow key={chat.id} chat={chat} onDelete={handleDeleteChat} />
+            ))} */}
         </div>
     </div>
     </>
