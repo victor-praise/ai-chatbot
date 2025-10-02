@@ -28,7 +28,7 @@ function Sidebar() {
 
         <div className='p-4 border-b border-gray-200/50'>
             <Button className='w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200/50 shadow-sm hover:shadow transition-all duration-200'
-             onClick={handleNewChat}
+            //  onClick={handleNewChat}
             >
                 <PlusIcon className='mr-2 h-4 w-4'/> New Chat
             </Button>
