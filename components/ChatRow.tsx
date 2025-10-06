@@ -15,8 +15,9 @@ function ChatRow({chat, onDelete}:{chat:Doc<"chats">; onDelete: (id: Id<"chats">
     return <div className="group rounded-xl border border-gray-200/30 bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md" onClick={handleClick}>{chat.title}
     <div className="p-4">
         <div className="flex justify-between items-start">
-            
+            chat
         </div>
+        {/* {lastMessage && (<p className="text-x5 text-gray-400 mt-1.5 font-medium"><TimeAgo date={lastMessage.createdAt} /></p>)} */}
     </div>
     </div>
 }
