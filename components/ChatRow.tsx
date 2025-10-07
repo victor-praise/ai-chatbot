@@ -2,6 +2,8 @@ import { Doc, Id } from "@/convex/_generated/dataModel";
 import { NavigationContext } from "@/lib/NavigationProvider";
 import { useRouter } from "next/navigation";
 import { use } from "react";
+import { Button } from "./ui/button";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 function ChatRow({chat, onDelete}:{chat:Doc<"chats">; onDelete: (id: Id<"chats">)=>void}){
 
@@ -17,6 +19,12 @@ function ChatRow({chat, onDelete}:{chat:Doc<"chats">; onDelete: (id: Id<"chats">
         <div className="flex justify-between items-start">
             chat
         </div>
+        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity duration-200" onClick={(e)=>{
+            e.stopPropagation();
+            onDelete(chat._id);
+        }}>
+            <TrashIcon className="h-4 w-4 text-gray-500 transition-colors" />
+        </Button>
         {/* {lastMessage && (<p className="text-x5 text-gray-400 mt-1.5 font-medium"><TimeAgo date={lastMessage.createdAt} /></p>)} */}
     </div>
     </div>
