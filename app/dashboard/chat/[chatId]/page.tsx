@@ -1,3 +1,5 @@
+import ChatInterface from "@/components/ChatInterface";
+import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { getConvexClient } from "@/lib/convex";
 import { auth } from "@clerk/nextjs/server";
@@ -19,12 +21,25 @@ async function ChatPage({params}: ChatPageProps) {
     if(!userId){
         redirect("/");
     }
+    try {
+        const convex = getConvexClient();
 
-    const convex = getConvexClient();
+    const initialMessages = await convex.query(api.messages.list, {chatId});
+     return (
+        <div>
+            <ChatInterface chatId={chatId} initialMessages={initialMessages} />
+        </div>
+     )
+     
+    } catch (error) {
+        console.error("Error loading chat: ", error);
+        redirect("/dashboard");
+    }
+
     
-  return (
-    <div>ChatPage</div>
-  )
+    
+ <div>ChatPage</div>
+  
 }
 
 export default ChatPage
