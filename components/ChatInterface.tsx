@@ -4,6 +4,7 @@ import { Doc, Id } from "@/convex/_generated/dataModel";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import { ChatRequestBody } from "@/lib/type";
 
 interface ChatInterfaceProps{
     chatId: Id<"chats">;
@@ -43,6 +44,46 @@ function ChatInterface({chatId, initialMessages}: ChatInterfaceProps) {
             role:"user",
             createdAt: Date.now()
         } as Doc<"messages">;
+
+        setMessages((prev) => [...prev, optimisticUserMessage]);
+
+        let fullResponse = "";
+
+        try {
+            const requestBody: ChatRequestBody = {
+                messages: messages.map((msg) => ({
+                    role:msg.role,
+                    content: msg.content,
+                })),
+                newMessage:trimmedInput,
+                chatId,
+            }
+
+            const response = await fetch("/api/chat/stream", {
+                method:"POST",
+                headers:{"Content-Type": "application/json"},
+                body: JSON.stringify(requestBody),
+            })
+
+            if(!response.ok) throw new Error(await response.text());
+            if(!response.body) throw new Error("No response body available");
+
+            
+
+
+        } catch (error) {
+            setMessages((prev)=> prev.filter((msg)=> msg._id !== optimisticUserMessage._id));
+
+            setStreamedResponse("error"
+
+                // formatTerminalOutput("error",
+                //     "failed to process message",
+                //     error instanceof Error ? error.message : "Unknown error"
+                // )
+            );
+        } finally{
+            setIsLoading(false)
+        }
     }
   return (
     <main className="flex flex-col h-[calc(100vh-theme(spacing.14))]">
