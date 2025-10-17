@@ -1,7 +1,7 @@
 'use client'
 
 import { Doc, Id } from "@/convex/_generated/dataModel";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -16,6 +16,14 @@ function ChatInterface({chatId, initialMessages}: ChatInterfaceProps) {
 
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false)
+    const  [streamedResponse, setStreamedResponse] = useState("");
+    const [currentTool, setCurrentTool] = useState<{name:string,input:unknown} | null>(null);
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(()=>{
+        messagesEndRef.current?.scrollIntoView({behavior:"smooth"})
+    },[messages, streamedResponse])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,12 +32,28 @@ function ChatInterface({chatId, initialMessages}: ChatInterfaceProps) {
         if(!trimmedInput || isLoading) return;
 
         setInput("");
-
+        setStreamedResponse("")
+        setCurrentTool(null)
         setIsLoading(true);
+
+        const optimisticUserMessage: Doc<"messages"> = {
+            _id: `temp_${Date.now()}`,
+            chatId,
+            content: trimmedInput,
+            role:"user",
+            createdAt: Date.now()
+        } as Doc<"messages">;
     }
   return (
     <main className="flex flex-col h-[calc(100vh-theme(spacing.14))]">
-        <section className="flex-1"></section>
+        <section className="flex-1">
+            <div>
+
+
+                <div ref={messagesEndRef}/>
+            </div>
+
+        </section>
         <footer className="border-t bg-white p-4">
             <form onSubmit={handleSubmit} className="max-w-4xl mx-auto relative">
                 <div className="relative flex items-center">
