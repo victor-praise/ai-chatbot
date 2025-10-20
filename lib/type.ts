@@ -13,3 +13,44 @@ export interface ChatRequestBody {
     newMessage: string;
     chatId: Id<"chats">;
 }
+
+export enum StreamMessageType{
+    Token = "token",
+    Error = "error",
+    Connected = "connected",
+    Done = "done",
+    ToolStart = "tool_start",
+    ToolEnd = "tool_end",
+}
+
+export interface BaseStreamMessage{
+    type: StreamMessageType;
+}
+export interface ErrorMessage extends BaseStreamMessage{
+    type: StreamMessageType.Error;
+    error:string;
+}
+export interface TokenMessage extends BaseStreamMessage{
+    type: StreamMessageType.Token;
+    token:string;
+}
+export interface ConnectedMessage extends BaseStreamMessage{
+    type: StreamMessageType.Connected;
+    
+}
+export interface DoneMessage extends BaseStreamMessage{
+    type: StreamMessageType.Connected;
+    
+}
+export interface ToolStartMessage extends BaseStreamMessage{
+    type: StreamMessageType.ToolStart;
+    tool:string;
+    input: unknown;
+}
+export interface ToolEndMessage extends BaseStreamMessage{
+    type: StreamMessageType.ToolEnd;
+    tool:string;
+    output:unknown;
+}
+
+export type StreamMessage = | TokenMessage | ErrorMessage | ConnectedMessage | DoneMessage | ToolStartMessage | ToolEndMessage;
